@@ -57,8 +57,3 @@ public class Employeeinfo {
 //        Many-to-One: Many employees can belong to one department.
 
 
-//email dataof joining  emp id empfisrst , last , salary , age ,
-
-//dept = deptis deptname
-//
-//degina degiid and name

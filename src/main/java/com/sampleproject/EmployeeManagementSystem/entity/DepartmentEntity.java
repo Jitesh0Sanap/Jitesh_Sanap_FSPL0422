@@ -19,5 +19,5 @@ public class DepartmentEntity {
     private String createdBy;
     private LocalDateTime createdDate;
     private String updatedBy;
-    private LocalDateTime UpdatedDate;
+    private LocalDateTime updatedDate;
 }

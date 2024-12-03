@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/ems")
@@ -26,4 +27,17 @@ public class EmployeeController {
 
         return new ResponseEntity<>(employeeService.addData(employeeDto) , CREATED);
     }
+
+    @GetMapping("/getAllData")
+    public ResponseEntity<List<Employeeinfo>> getAllData(){
+        return new ResponseEntity<>(employeeService.getAllData() , HttpStatus.FOUND);
+    }
+
+    @GetMapping("/getById/{empId}")
+    public ResponseEntity<Optional<Employeeinfo>> getEmployeeById(@PathVariable long empId){
+        Optional<Employeeinfo> employeeById = employeeService.getEmployeeById(empId);
+        return new ResponseEntity<>(employeeById , HttpStatus.FOUND);
+    }
+
+
 }
