@@ -1,5 +1,6 @@
 package com.sampleproject.EmployeeManagementSystem.services;
 
+import com.sampleproject.EmployeeManagementSystem.Exception.EmployeeNotFoundException;
 import com.sampleproject.EmployeeManagementSystem.dto.EmployeeDto;
 import com.sampleproject.EmployeeManagementSystem.entity.Employeeinfo;
 import com.sampleproject.EmployeeManagementSystem.repository.EmployeeRepository;
@@ -20,7 +21,7 @@ public class EmployeeService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Employeeinfo addData(EmployeeDto employeeDto){
+    public Employeeinfo addData(EmployeeDto employeeDto) {
 //        Employeeinfo employeeinfo = new Employeeinfo();
 //        employeeinfo.setEmpId(0L);
 //        employeeinfo.setEmpFirstName(employeeDto.getEmpFirstName());
@@ -39,7 +40,7 @@ public class EmployeeService {
 //        employeeinfo.setUpdatedDate(LocalDateTime.now());
 //        return employeeRepository.save(employeeinfo);
 
-        Employeeinfo employeeinfo = this.dtoToEmployeeinfo(employeeDto) ;
+        Employeeinfo employeeinfo = this.dtoToEmployeeinfo(employeeDto);
         employeeinfo.setActive(true);
         employeeinfo.setCreatedDate(LocalDateTime.now());
         employeeinfo.setUpdatedDate(LocalDateTime.now());
@@ -50,22 +51,47 @@ public class EmployeeService {
 
     public List<Employeeinfo> getAllData() {
         List<Employeeinfo> listEmployeeinfo = employeeRepository.findAll();
-        return  listEmployeeinfo;
+        return listEmployeeinfo;
     }
 
 
-    public Employeeinfo dtoToEmployeeinfo( EmployeeDto employeeDto){
-        Employeeinfo employeeinfo = this.modelMapper.map(employeeDto , Employeeinfo.class);
+    public Employeeinfo dtoToEmployeeinfo(EmployeeDto employeeDto) {
+        Employeeinfo employeeinfo = this.modelMapper.map(employeeDto, Employeeinfo.class);
         return employeeinfo;
     }
 
-    public EmployeeDto employeeInfoToDto(Employeeinfo employeeinfo){
-        EmployeeDto employeeDto = this.modelMapper.map(employeeinfo , EmployeeDto.class);
+    public EmployeeDto employeeInfoToDto(Employeeinfo employeeinfo) {
+        EmployeeDto employeeDto = this.modelMapper.map(employeeinfo, EmployeeDto.class);
         return employeeDto;
     }
 
-    public Optional<Employeeinfo> getEmployeeById(long empId) {
-        Optional<Employeeinfo> getEmployeeById = employeeRepository.findById(empId);
+    public Employeeinfo getEmployeeById(long empId) {
+        Employeeinfo getEmployeeById = employeeRepository.findById(empId).orElseThrow(() -> new EmployeeNotFoundException("employee", "empId", empId));
         return getEmployeeById;
+    }
+
+
+    public Employeeinfo updatedEmpData(EmployeeDto employeeDto, long empId) {
+        Employeeinfo getEmployeeById = employeeRepository.findById(empId).orElseThrow(() -> new EmployeeNotFoundException("employee", "empId", empId));
+
+        getEmployeeById.setEmpFirstName(employeeDto.getEmpFirstName());
+        getEmployeeById.setEmpLastName(employeeDto.getEmpLastName());
+        getEmployeeById.setEmpEmail(employeeDto.getEmpEmail());
+        getEmployeeById.setEmpAddress(employeeDto.getEmpAddress());
+        getEmployeeById.setEmpAge(employeeDto.getEmpAge());
+        getEmployeeById.setCreatedBy(employeeDto.getCreatedBy());
+        getEmployeeById.setEmpDept(employeeDto.getEmpDept());
+        getEmployeeById.setUpdatedBy(employeeDto.getUpdatedBy());
+        getEmployeeById.setEmpDesignation(employeeDto.getEmpDesignation());
+        getEmployeeById.setEmpDateOfJoining(employeeDto.getEmpDateOfJoining());
+        getEmployeeById.setEmpSalary(employeeDto.getEmpSalary());
+
+        return employeeRepository.save(getEmployeeById);
+
+    }
+
+    public void deleteEmployee(long empId) {
+        Employeeinfo getEmployeeById = employeeRepository.findById(empId).orElseThrow(() -> new EmployeeNotFoundException("employee", "empId", empId));
+        employeeRepository.delete(getEmployeeById);
     }
 }

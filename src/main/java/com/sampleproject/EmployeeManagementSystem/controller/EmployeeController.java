@@ -1,5 +1,6 @@
 package com.sampleproject.EmployeeManagementSystem.controller;
 
+import com.sampleproject.EmployeeManagementSystem.Payload.ApiResponce;
 import com.sampleproject.EmployeeManagementSystem.dto.EmployeeDto;
 import com.sampleproject.EmployeeManagementSystem.entity.Employeeinfo;
 import com.sampleproject.EmployeeManagementSystem.services.EmployeeService;
@@ -34,10 +35,20 @@ public class EmployeeController {
     }
 
     @GetMapping("/getById/{empId}")
-    public ResponseEntity<Optional<Employeeinfo>> getEmployeeById(@PathVariable long empId){
-        Optional<Employeeinfo> employeeById = employeeService.getEmployeeById(empId);
+    public ResponseEntity< Employeeinfo > getEmployeeById(@PathVariable long empId){
+         Employeeinfo  employeeById = employeeService.getEmployeeById(empId);
         return new ResponseEntity<>(employeeById , HttpStatus.FOUND);
     }
 
+    @PutMapping("/updateEmp/{empId}")
+    public ResponseEntity<Employeeinfo> updateEmpData(@RequestBody EmployeeDto employeeDto , @PathVariable long empId){
+        Employeeinfo updateData = employeeService.updatedEmpData(employeeDto , empId);
+        return new ResponseEntity<>(updateData , OK);
+    }
 
+    @DeleteMapping("/deleteEmp/{empId}")
+    public ResponseEntity<ApiResponce> deleteEmployee(@PathVariable long empId)
+    {   employeeService.deleteEmployee(empId);
+        return new ResponseEntity<ApiResponce>(new ApiResponce("employee delete" , true), OK );
+    }
 }
